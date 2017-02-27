@@ -5,6 +5,8 @@ Downloads files behind cloudflare's anti-bot page by passing cookies and user ag
 ## Dependencies:
 * [Python 2 or 3](https://www.python.org/)
 * [cloudflare-scrape](https://github.com/Anorov/cloudflare-scrape)
+* wget (optional)
+* curl (optional)
 
 I made it only for Linux, but it might work on other systems too.
 
