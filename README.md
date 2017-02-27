@@ -19,7 +19,7 @@ Or you can install it on your Linux system:
 1. `wget https://raw.githubusercontent.com/Caesim404/clouddl/master/clouddl.py`
 2. `sudo install -Dm755 clouddl.py /usr/bin/clouddl`
 
-Or if you have Arch Linux, get it from the [AUR](https://aur.archlinux.org/packages/clouddl.git).
+Or if you have Arch Linux, get it from the [AUR](https://aur.archlinux.org/packages/clouddl-git).
 
 ## Examples:
 
