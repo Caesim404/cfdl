@@ -23,6 +23,8 @@
 # SOFTWARE.
 #
 
+VERSION="0.2"
+
 import cfscrape
 import argparse
 import subprocess
@@ -30,11 +32,12 @@ import subprocess
 parser = argparse.ArgumentParser(description="Downloads files behind cloudflare's anti-bot page by passing cookies and user agent to another command.")
 parser.add_argument("-d", "--downloader", choices=["curl","wget"], action="store", help="use a predefined command")
 parser.add_argument("-u", "--url", action="store", required=True, help="downlad from this url")
-parser.add_argument("-H", "--header", action="append", type=lambda kv: kv.split(":"), help="add a HTTP header")
+parser.add_argument("-H", "--header", action="append", type=lambda kv: kv.split(":"), default=[], help="add a HTTP header")
 parser.add_argument("-a", "--user-agent", action="store", type=str, help="use this user agent")
 parser.add_argument("-v", "--verbose", action="store_true", help="show debug info")
-parser.add_argument("command", metavar="COMMAND", type=str, nargs=argparse.REMAINDER, help="""
-	call a command. Available variables: 
+parser.add_argument("-V", "--version", action='version', version='%(prog)s ' + VERSION)
+parser.add_argument("command", metavar="COMMAND", default=[], nargs=argparse.REMAINDER, help="""
+	call a command or, if -d is set, add as arguments to it (may start with --). Available variables: 
 		{a} = user agent, 
 		{c} = cookies, 
 		{u} = url, 
@@ -43,25 +46,30 @@ parser.add_argument("command", metavar="COMMAND", type=str, nargs=argparse.REMAI
 args = parser.parse_args()
 
 args.header = {k:v for k,v in args.header}
+if len(args.command)>0 and args.command[0] == "--":
+	args.command.pop(0)
 
-if args.downloader and args.command:
-	parser.error("-d/--downloader can't be set alongside COMMAND")
 if not args.downloader and not args.command:
 	parser.error("you must set either -d/--downloader or COMMAND")
 
 if args.verbose:
 	print("Arguments:", args)
 
-tokens, user_agent = cfscrape.get_tokens(args.url, args.user_agent, headers=args.header, stream=True)
+try:
+	tokens, user_agent = cfscrape.get_tokens(args.url, args.user_agent, headers=args.header, stream=True)
+except ValueError:
+	tokens = {}
+	user_agent = args.user_agent or cfscrape.DEFAULT_USER_AGENT
+
 if args.verbose:
 	print("Tokens:", tokens)
 	print("User-Agent:", user_agent)
 
 
 if args.downloader == "curl":
-	cmd = ["curl", "-O", "--cookie", "{c}", "--user-agent", "{a}", "--header", "{h}", "{u}"]
+	cmd = ["curl", "-O", "--cookie", "{c}", "--user-agent", "{a}", "--header", "{h}", "{o}", "{u}"]
 elif args.downloader == "wget":
-	cmd = ["wget", "--header", "Cookie: {c}", "--user-agent", "{a}", "--header", "{h}", "{u}"]
+	cmd = ["wget", "--header", "Cookie: {c}", "--user-agent", "{a}", "--header", "{h}", "{o}", "{u}"]
 else:
 	cmd = args.command
 
@@ -75,6 +83,7 @@ while True:
 		a=user_agent,
 		u=args.url,
 		h="{h}",
+		o="{o}",
 	)
 	
 	j=i-1
@@ -87,6 +96,9 @@ while True:
 			cmd.insert(j, word)
 			i += 2
 		i -= 1
+	elif cmd[i] == "{o}":
+		cmd = cmd[:i] + args.command + cmd[i+1:]
+		i += len(args.command) -1
 	else:
 		i += 1
 	

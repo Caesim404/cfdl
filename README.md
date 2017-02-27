@@ -1,4 +1,4 @@
-# clouddl 0.1
+# clouddl 0.2
 
 Downloads files behind cloudflare's anti-bot page by passing cookies and user agent to another command.
 
@@ -19,7 +19,7 @@ Or you can install it on your Linux system:
 1. `wget https://raw.githubusercontent.com/Caesim404/clouddl/master/clouddl.py`
 2. `sudo install -Dm755 clouddl.py /usr/bin/clouddl`
 
-Or if you have Arch Linux, get it from the AUR.
+Or if you have Arch Linux, get it from the [AUR](https://aur.archlinux.org/packages/clouddl.git).
 
 ## Examples:
 
@@ -27,7 +27,7 @@ Or if you have Arch Linux, get it from the AUR.
 `./clouddl.py -d curl -u http://example.com/file.php`
 #### Download a file using wget
 `./clouddl.py -d wget -u http://example.com/file.php`
-#### Download a file using custom command
-`./clouddl.py -u http://example.com/file.php downloader --cookies {c} --user-agent {a} --url {u}`
+#### Download a file using a custom command
+`./clouddl.py -u http://example.com/file.php -- my-downloader --cookies {c} --user-agent {a} --url {u}`
 #### Download a file using custom headers and user agent
 `./clouddl.py -d curl -H "Referer: example.org" -H "X-Custom: value" -a "Custom User-Agent" -u http://example.com/file.php`
