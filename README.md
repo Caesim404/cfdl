@@ -28,6 +28,6 @@ Or if you have Arch Linux, get it from the [AUR](https://aur.archlinux.org/packa
 #### Download a file using wget
 `./cfdl.py -d wget -u http://example.com/file.zip`
 #### Download a file using a custom command
-`./cfdl.py -u http://example.com/file.zio -- my-downloader --cookies {c} --user-agent {a} --url {u}`
+`./cfdl.py -u http://example.com/file.zip -- my-downloader --cookies {c} --user-agent {a} --url {u}`
 #### Download a file using custom headers and user agent
 `./cfdl.py -d curl -H "Referer: example.org" -H "X-Custom: value" -a "Custom User-Agent" -u http://example.com/file.zip`
