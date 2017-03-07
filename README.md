@@ -26,3 +26,8 @@ If you have Arch Linux, get it from the [AUR](https://aur.archlinux.org/packages
 `./cfdl.py -u http://example.com/file.zip -- my-downloader --cookies {c} --user-agent {a} --url {u}`
 #### Download a file using custom headers and user agent
 `./cfdl.py -d curl -H "Referer: example.org" -H "X-Custom: value" -a "Custom User-Agent" -u http://example.com/file.zip`
+
+#### Use it to download source files in a PKGBUILD
+    makedepends=('cfdl')
+    DLAGENTS=('http::/usr/bin/cfdl -u %u -d curl -- -fLC - --retry 3 --retry-delay 3 -o %o'
+              'https::/usr/bin/cfdl -u %u -d curl -- -fLC - --retry 3 --retry-delay 3 -o %o')
